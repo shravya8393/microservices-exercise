@@ -67,4 +67,9 @@ public class ProductController {
     public List<Product> filterProducts(@RequestParam double minPrice) {
         return productService.filterByPrice(minPrice);
     }
+    
+    @GetMapping("/native")
+    public List<Product> getProductsAbovePrice(@RequestParam double price) {
+        return productService.getProductsAbovePrice(price);
+    }
 }

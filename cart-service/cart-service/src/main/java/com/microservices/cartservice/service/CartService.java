@@ -101,4 +101,8 @@ public class CartService {
                 .filter(item -> item.getQuantity() >= minQty)
                 .toList();
     }
+    
+    public List<CartItem> getItemsByCartId(Integer cartId) {
+        return cartItemRepository.findByCartIdNative(cartId);
+    }
 }

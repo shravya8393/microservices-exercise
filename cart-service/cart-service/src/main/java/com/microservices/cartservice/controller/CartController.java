@@ -101,4 +101,9 @@ public class CartController {
     public List<CartItem> filterItems(@RequestParam int minQty) {
         return cartService.filterItemsByQuantity(minQty);
     }
+    
+    @GetMapping("/items/cart/{cartId}")
+    public List<CartItem> getItemsByCart(@PathVariable Integer cartId) {
+        return cartService.getItemsByCartId(cartId);
+    }
 }

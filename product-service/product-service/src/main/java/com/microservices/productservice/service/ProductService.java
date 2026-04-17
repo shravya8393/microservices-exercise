@@ -57,5 +57,8 @@ public class ProductService {
                 .filter(p -> p.getPrice() >= minPrice)
                 .toList();
     }
+    public List<Product> getProductsAbovePrice(double price) {
+        return productRepository.findProductsAbovePrice(price);
+    }
     
 }
