@@ -15,22 +15,71 @@ public class CartService {
 
     @Autowired
     private CartRepository cartRepository;
-
     @Autowired
     private CartItemRepository cartItemRepository;
+
+   // for cart
 
     // CREATE CART
     public Cart createCart(Cart cart) {
         return cartRepository.save(cart);
     }
 
-    // ADD ITEM TO CART
-    public CartItem addItemToCart(CartItem item) {
+    // GET ALL CARTS
+    public List<Cart> getAllCarts() {
+        return cartRepository.findAll();
+    }
+
+    // GET CART BY ID
+    public Cart getCartById(Integer id) {
+        return cartRepository.findById(id).orElse(null);
+    }
+
+    // UPDATE CART
+    public Cart updateCart(Integer id, Cart updatedCart) {
+        Cart existing = cartRepository.findById(id).orElse(null);
+        if (existing == null) return null;
+
+        existing.setUserId(updatedCart.getUserId());
+        return cartRepository.save(existing);
+    }
+
+    // DELETE CART
+    public void deleteCart(Integer id) {
+        cartRepository.deleteById(id);
+    }
+
+    // cart items
+
+    // ADD ITEM
+    public CartItem addItem(CartItem item) {
         return cartItemRepository.save(item);
     }
 
-    // GET CART ITEMS
-    public List<CartItem> getCartItems() {
+    // GET ALL ITEMS
+    public List<CartItem> getAllItems() {
         return cartItemRepository.findAll();
+    }
+
+    // GET ITEM BY ID
+    public CartItem getItemById(Integer id) {
+        return cartItemRepository.findById(id).orElse(null);
+    }
+
+    // UPDATE ITEM
+    public CartItem updateItem(Integer id, CartItem updatedItem) {
+        CartItem existing = cartItemRepository.findById(id).orElse(null);
+        if (existing == null) return null;
+
+        existing.setCartId(updatedItem.getCartId());
+        existing.setProductId(updatedItem.getProductId());
+        existing.setQuantity(updatedItem.getQuantity());
+
+        return cartItemRepository.save(existing);
+    }
+
+    // DELETE ITEM
+    public void deleteItem(Integer id) {
+        cartItemRepository.deleteById(id);
     }
 }
