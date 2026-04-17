@@ -7,6 +7,9 @@ import com.microservices.cartservice.entity.Cart;
 import com.microservices.cartservice.entity.CartItem;
 import com.microservices.cartservice.service.CartService;
 
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.List;
 
 @RestController
@@ -82,5 +85,20 @@ public class CartController {
     public String deleteItem(@PathVariable Integer id) {
         cartService.deleteItem(id);
         return "Item deleted";
+    }
+    
+ // PAGINATION FOR CART ITEMS
+    @GetMapping("/items/paged")
+    public Page<CartItem> getItemsPaged(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        return cartService.getItemsPaged(page, size);
+    }
+
+    // FILTER USING STREAMS
+    @GetMapping("/items/filter")
+    public List<CartItem> filterItems(@RequestParam int minQty) {
+        return cartService.filterItemsByQuantity(minQty);
     }
 }

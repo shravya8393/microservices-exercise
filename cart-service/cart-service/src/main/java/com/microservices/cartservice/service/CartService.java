@@ -8,6 +8,11 @@ import com.microservices.cartservice.entity.CartItem;
 import com.microservices.cartservice.repository.CartRepository;
 import com.microservices.cartservice.repository.CartItemRepository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+
+
 import java.util.List;
 
 @Service
@@ -81,5 +86,19 @@ public class CartService {
     // DELETE ITEM
     public void deleteItem(Integer id) {
         cartItemRepository.deleteById(id);
+    }
+    
+ // PAGINATION
+    public Page<CartItem> getItemsPaged(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return cartItemRepository.findAll(pageable);
+    }
+
+    // FILTER USING STREAMS
+    public List<CartItem> filterItemsByQuantity(int minQty) {
+        return cartItemRepository.findAll()
+                .stream()
+                .filter(item -> item.getQuantity() >= minQty)
+                .toList();
     }
 }
