@@ -86,6 +86,14 @@ public class CartController {
         cartService.deleteItem(id);
         return "Item deleted";
     }
+   
+    @PostMapping("/add")
+    public String addToCart(@RequestParam Long productId,
+                           @RequestParam int quantity) {
+
+        cartService.addToCart(productId, quantity);
+        return "Added to cart";
+    }
     
  // PAGINATION FOR CART ITEMS
     @GetMapping("/items/paged")

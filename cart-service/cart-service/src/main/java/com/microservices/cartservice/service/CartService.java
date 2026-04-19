@@ -11,7 +11,7 @@ import com.microservices.cartservice.repository.CartItemRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
-
+import com.microservices.cartservice.dto.ProductDTO;
 
 import java.util.List;
 
@@ -22,6 +22,8 @@ public class CartService {
     private CartRepository cartRepository;
     @Autowired
     private CartItemRepository cartItemRepository;
+    @Autowired
+    private ProductClient productClient;
 
    // for cart
 
@@ -86,6 +88,20 @@ public class CartService {
     // DELETE ITEM
     public void deleteItem(Integer id) {
         cartItemRepository.deleteById(id);
+    }
+    public void addToCart(Long productId, int quantity) {
+
+        ProductDTO product = productClient.getProductById(productId);
+
+        if (product == null) {
+            throw new RuntimeException("Product not found");
+        }
+
+        if (product.getStock() < quantity) {
+            throw new RuntimeException("Insufficient stock");
+        }
+
+        System.out.println("Product validated, adding to cart...");
     }
     
  // PAGINATION
