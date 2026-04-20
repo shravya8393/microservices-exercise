@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import com.microservices.cartservice.dto.ProductDTO;
 
+import com.microservices.cartservice.kafka.KafkaProducerService;
+import com.microservices.cartservice.event.CartEvent;
 import java.util.List;
 
 @Service
@@ -24,6 +26,8 @@ public class CartService {
     private CartItemRepository cartItemRepository;
     @Autowired
     private ProductClient productClient;
+    @Autowired
+    private KafkaProducerService kafkaProducerService;
 
    // for cart
 
@@ -100,8 +104,19 @@ public class CartService {
         if (product.getStock() < quantity) {
             throw new RuntimeException("Insufficient stock");
         }
+        // 4. SAVE cart item
+        CartItem item = new CartItem();
+        //item.setProductId(productId);
+        item.setProductId(productId.intValue());
+        item.setQuantity(quantity);
+        cartItemRepository.save(item);
 
-        System.out.println("Product validated, adding to cart...");
+        // 5. SEND EVENT TO KAFKA
+        CartEvent event = new CartEvent(1L, productId, quantity);
+        kafkaProducerService.sendEvent(event);
+
+        System.out.println("Cart item added + Kafka event sent");
+
     }
     
  // PAGINATION
